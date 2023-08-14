@@ -2,12 +2,15 @@ import React, { useState } from "react";
 import "./App.css";
 
 function App() {
-  const [input, setInput] = useState("0");
-  const [prevValue, setPrevValue] = useState("");
-  const [operator, setOperator] = useState("");
+  // สถานะของแอปพลิเคชัน
+  const [input, setInput] = useState("0"); // ค่าที่แสดงบนหน้าจอ
+  const [prevValue, setPrevValue] = useState(""); // ค่าที่ป้อนก่อนหน้า
+  const [operator, setOperator] = useState(""); // ตัวดำเนินการทางคณิตศาสตร์
 
+  // ฟังก์ชันที่จัดการกับการกดปุ่มตัวเลข
   const handleButtonPress = (val) => {
     if (input.length < 16) {
+      // ผลลัพธ์จะต้องไม่เกิน 16 ตัว เพื่อให้พอดีกับ .display css ที่ทำไว้ ถ้าเกินจะขึ้น Error
       if (input === "0" || input === "Error") {
         setInput(val);
       } else {
@@ -16,12 +19,14 @@ function App() {
     }
   };
 
+  // ฟังก์ชันที่จัดการกับการกดปุ่ม operator
   const handleOperatorPress = (val) => {
-    setOperator(val);
-    setPrevValue(input);
-    setInput("0");
+    setOperator(val); // บันทึกตัวดำเนินการ
+    setPrevValue(input); // บันทึกค่าปัจจุบันลงในค่าที่ป้อนก่อนหน้า
+    setInput("0"); // เริ่มการคำนวณใหม่
   };
 
+  // ฟังก์ชันที่คำนวณผลลัพธ์
   const calculateResult = () => {
     const currentValue = parseFloat(input);
     const previousValue = parseFloat(prevValue);
@@ -38,14 +43,23 @@ function App() {
         result = previousValue * currentValue;
         break;
       case "/":
-        result = previousValue / currentValue;
+        if (currentValue !== 0) {
+          result = previousValue / currentValue;
+        } else {
+          setInput("Error");
+          setPrevValue("");
+          setOperator("");
+          return;
+        }
         break;
       default:
         break;
     }
 
-    if (result.toString().length <= 16) {
-      setInput(result.toString());
+    if (Number.isInteger(result)) {
+      setInput(result.toString()); // แสดงผลเป็นสตริง ถ้าเป็นจำนวนเต็ม ไม่ต้องแสดงจุดทศนิยม เช่น 3*2 = 6 ต้องไม่เป็น 6.00000000
+    } else if (!isNaN(result)) {
+      setInput(result.toFixed(8)); // ถ้าผลลัพธ์มีจุดทศนิยม ให้แสดงผลทศนิยม 8 ตำแหน่ง เพื่อไม่ให้มากเกินไป (ความสวยงาม)
     } else {
       setInput("Error");
     }
@@ -54,6 +68,7 @@ function App() {
     setOperator("");
   };
 
+  // ฟังก์ชันที่เคลียร์ค่า
   const clearInput = () => {
     setInput("0");
     setPrevValue("");
@@ -76,7 +91,7 @@ function App() {
             9
           </button>
           <button className="pad" onClick={() => handleOperatorPress("/")}>
-            /
+            ÷
           </button>
         </div>
         <div className="row">
@@ -90,7 +105,7 @@ function App() {
             6
           </button>
           <button className="pad" onClick={() => handleOperatorPress("*")}>
-            *
+            x
           </button>
         </div>
         <div className="row">
