@@ -5,7 +5,7 @@ function App() {
   // สถานะของแอปพลิเคชัน
   const [input, setInput] = useState("0"); // ค่าที่แสดงบนหน้าจอ
   const [prevValue, setPrevValue] = useState(""); // ค่าที่ป้อนก่อนหน้า
-  const [operator, setOperator] = useState(""); // ตัวดำเนินการทางคณิตศาสตร์
+  const [operator, setOperator] = useState(""); // operator
 
   // ฟังก์ชันที่จัดการกับการกดปุ่มตัวเลข
   const handleButtonPress = (val) => {
